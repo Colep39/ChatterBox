@@ -224,28 +224,28 @@ export async function searchPosts(searchTerm: string) {
   }
 }
 
-export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
-  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
+export async function getInfinitePosts({
+  pageParam,
+}: {
+  pageParam: string | null;
+}) {
+  const queries = [
+    Query.orderDesc("$updatedAt"),
+    Query.limit(9),
+  ];
 
   if (pageParam) {
-    queries.push(Query.cursorAfter(pageParam.toString()));
+    queries.push(Query.cursorAfter(pageParam));
   }
 
-  try {
-    const posts = await databases.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.postCollectionId,
-      queries
-    );
+  const posts = await databases.listDocuments(
+    appwriteConfig.databaseId,
+    appwriteConfig.postCollectionId,
+    queries
+  );
 
-    if (!posts) throw Error;
-
-    return posts;
-  } catch (error) {
-    console.log(error);
-  }
+  return posts;
 }
-
 // ============================== GET POST BY ID
 export async function getPostById(postId?: string) {
   if (!postId) throw Error;

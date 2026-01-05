@@ -55,6 +55,20 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        // Dark theme
+        "dark-1": "#09090B",
+        "dark-2": "#18181B",
+        "dark-3": "#27272A",
+        "dark-4": "#1F1F22",
+
+        // Light theme accents
+        "light-1": "#FAFAFA",
+        "light-2": "#E4E4E7",
+        "light-3": "#D4D4D8",
+        "light-4": "#A1A1AA",
+
+        // Primary
+        "primary-500": "#877EFF",
       },
     },
   },

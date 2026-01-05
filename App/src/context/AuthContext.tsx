@@ -1,10 +1,12 @@
+/* eslint-disable react-refresh/only-export-components */
+
 import { useNavigate } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { IUser } from "@/types";
 import { getCurrentUser } from "@/lib/appwrite/api";
 
-export const INITIAL_USER = {
+const INITIAL_USER = {
   id: "",
   name: "",
   username: "",
@@ -77,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     checkAuthUser();
-  }, []);
+  }, [navigate]);
 
   const value = {
     user,

@@ -4,9 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ================================
-   GLOBAL RESET (PLAIN CSS ONLY)
-   ================================ */
 *,
 *::before,
 *::after {
@@ -24,11 +21,7 @@ body {
   color: #ffffff;
 }
 
-/* ================================
-   UTILITIES
-   ================================ */
 @layer utilities {
-  /* TYPOGRAPHY */
   .h1-bold {
     @apply text-[36px] font-bold leading-[140%] tracking-tighter;
   }
@@ -131,7 +124,7 @@ body {
   }
 
   .user-grid {
-    @apply w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl;
+    @apply w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl;
   }
 
   /* Explore */
@@ -268,7 +261,7 @@ body {
   }
 
   .shad-form_message {
-    @apply text-red !important;
+    @apply text-red-500 !important;
   }
 
   .shad-input {
