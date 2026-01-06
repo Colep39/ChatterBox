@@ -5,21 +5,21 @@ import { Button } from "@/components/ui";
 import { convertFileToUrl } from "@/lib/utils";
 
 type FileUploaderProps = {
-  fieldChange: (files: File[]) => void;
+  fieldChange: (files: FileWithPath[]) => void;
   mediaUrl?: string;
 };
 
 const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
-  const [file, setFile] = useState<File[]>([]);
+  // const [file, setFile] = useState<File[]>([]);
   const [fileUrl, setFileUrl] = useState<string | undefined>(mediaUrl);
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
-      setFile(acceptedFiles);
+      //setFile(acceptedFiles);
       fieldChange(acceptedFiles);
       setFileUrl(convertFileToUrl(acceptedFiles[0]));
     },
-    [file]
+    [fieldChange]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
