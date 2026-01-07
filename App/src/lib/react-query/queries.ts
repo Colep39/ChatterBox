@@ -32,6 +32,7 @@ import type {
   IUpdatePost,
   IUpdateUser,
 } from "@/types";
+import { Post } from "@/types";
 
 
 // ============================================================
@@ -102,12 +103,13 @@ export const useCreatePost = () => {
 };
 
 export const useGetPostById = (postId?: string) => {
-  return useQuery({
+  return useQuery<Post | undefined>({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
-    queryFn: () => getPostById(postId),
+    queryFn: () => getPostById(postId!),
     enabled: !!postId,
   });
 };
+
 
 export const useGetUserPosts = (userId?: string) => {
   return useQuery({

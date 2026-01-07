@@ -25,7 +25,7 @@ export type IUpdatePost = {
   postId: string;
   caption: string;
   imageId: string;
-  imageUrl: URL;
+  imageUrl: URL | string;
   file: File[];
   location?: string;
   tags?: string;
@@ -45,4 +45,14 @@ export type INewUser = {
   email: string;
   username: string;
   password: string;
+};
+
+import { Models } from "appwrite";
+
+export type Post = Models.Document & {
+  caption: string;
+  location: string;
+  tags: string[];
+  imageId: string;
+  imageUrl: string;
 };

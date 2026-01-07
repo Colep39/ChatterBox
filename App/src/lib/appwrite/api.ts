@@ -2,6 +2,8 @@ import { ID, Query } from "appwrite";
 
 import { appwriteConfig, account, databases, storage, avatars } from "./config";
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
+import { ImageGravity } from "appwrite";
+import { Post } from "@/types";
 
 // ============================================================
 // AUTH
@@ -41,7 +43,7 @@ export async function saveUserToDB(user: {
   accountId: string;
   email: string;
   name: string;
-  imageUrl: URL;
+  imageUrl: URL | string;
   username?: string;
 }) {
   try {
@@ -61,7 +63,7 @@ export async function saveUserToDB(user: {
 // ============================== SIGN IN
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const session = await account.createEmailSession(user.email, user.password);
+    const session = await account.createSession(user.email, user.password);
 
     return session;
   } catch (error) {
@@ -184,7 +186,7 @@ export function getFilePreview(fileId: string) {
       fileId,
       2000,
       2000,
-      "top",
+      ImageGravity.Top,
       100
     );
 
@@ -247,23 +249,17 @@ export async function getInfinitePosts({
   return posts;
 }
 // ============================== GET POST BY ID
-export async function getPostById(postId?: string) {
-  if (!postId) throw Error;
 
-  try {
-    const post = await databases.getDocument(
-      appwriteConfig.databaseId,
-      appwriteConfig.postCollectionId,
-      postId
-    );
+export async function getPostById(postId: string): Promise<Post> {
+  const post = await databases.getDocument<Post>(
+    appwriteConfig.databaseId,
+    appwriteConfig.postCollectionId,
+    postId
+  );
 
-    if (!post) throw Error;
-
-    return post;
-  } catch (error) {
-    console.log(error);
-  }
+  return post;
 }
+
 
 // ============================== UPDATE POST
 export async function updatePost(post: IUpdatePost) {
@@ -449,7 +445,7 @@ export async function getRecentPosts() {
 
 // ============================== GET USERS
 export async function getUsers(limit?: number) {
-  const queries: any[] = [Query.orderDesc("$createdAt")];
+  const queries: string[] = [Query.orderDesc("$createdAt")];
 
   if (limit) {
     queries.push(Query.limit(limit));
