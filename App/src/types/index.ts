@@ -49,10 +49,28 @@ export type INewUser = {
 
 import { Models } from "appwrite";
 
+export type User = {
+  $id: string;
+  name: string;
+  username: string;
+  imageUrl?: string;
+};
+
+
 export type Post = Models.Document & {
   caption: string;
   location: string;
   tags: string[];
   imageId: string;
   imageUrl: string;
+  likes: Models.Document[];
+  creator: {
+    $id: string;
+    name: string;
+    imageUrl?: string;
+  };
+};
+
+export type SavedPost = Models.Document & {
+  post: Post;
 };

@@ -30,6 +30,10 @@ type Post = Models.Document & {
   imageUrl: string;
 };
 
+export type SavedPost = Models.Document & {
+  post: Post;
+};
+
 type PostFormProps = {
   post?: Post;
   action: "Create" | "Update";

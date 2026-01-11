@@ -227,27 +227,34 @@ export async function searchPosts(searchTerm: string) {
 }
 
 export async function getInfinitePosts({
-  pageParam,
-}: {
-  pageParam: string | null;
-}) {
-  const queries = [
-    Query.orderDesc("$updatedAt"),
-    Query.limit(9),
-  ];
+    pageParam,
+  }: {
+    pageParam: string | null;
+  }): Promise<{
+    documents: Post[];
+    total: number;
+  }> {
+    const queries = [
+      Query.orderDesc("$updatedAt"),
+      Query.limit(9),
+    ];
 
-  if (pageParam) {
-    queries.push(Query.cursorAfter(pageParam));
-  }
+    if (pageParam) {
+      queries.push(Query.cursorAfter(pageParam));
+    }
 
-  const posts = await databases.listDocuments(
-    appwriteConfig.databaseId,
-    appwriteConfig.postCollectionId,
-    queries
-  );
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      queries
+    );
 
-  return posts;
+    return posts as unknown as {
+      documents: Post[];
+      total: number;
+    };
 }
+
 // ============================== GET POST BY ID
 
 export async function getPostById(postId: string): Promise<Post> {
@@ -404,40 +411,41 @@ export async function deleteSavedPost(savedRecordId: string) {
 }
 
 // ============================== GET USER'S POST
-export async function getUserPosts(userId?: string) {
+export async function getUserPosts(
+  userId?: string
+): Promise<{ documents: Post[]; total: number } | undefined> {
   if (!userId) return;
 
-  try {
-    const post = await databases.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.postCollectionId,
-      [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
-    );
+  const posts = await databases.listDocuments<Post>(
+    appwriteConfig.databaseId,
+    appwriteConfig.postCollectionId,
+    [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+  );
 
-    if (!post) throw Error;
-
-    return post;
-  } catch (error) {
-    console.log(error);
-  }
+  return {
+    documents: posts.documents,
+    total: posts.total,
+  };
 }
 
+
 // ============================== GET POPULAR POSTS (BY HIGHEST LIKE COUNT)
-export async function getRecentPosts() {
-  try {
+export async function getRecentPosts(): Promise<{
+    documents: Post[];
+    total: number;
+  }> {
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
       [Query.orderDesc("$createdAt"), Query.limit(20)]
     );
 
-    if (!posts) throw Error;
-
-    return posts;
-  } catch (error) {
-    console.log(error);
-  }
+    return posts as unknown as {
+      documents: Post[];
+      total: number;
+    };
 }
+
 
 // ============================================================
 // USER

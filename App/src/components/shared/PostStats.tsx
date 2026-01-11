@@ -1,5 +1,5 @@
 import { Models } from "appwrite";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { checkIsLiked } from "@/lib/utils";
@@ -9,9 +9,10 @@ import {
   useDeleteSavedPost,
   useGetCurrentUser,
 } from "@/lib/react-query/queries";
+import { Post, SavedPost } from "@/types"; 
 
 type PostStatsProps = {
-  post: Models.Document;
+  post: Post;
   userId: string;
 };
 
@@ -20,7 +21,6 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const likesList = post.likes.map((user: Models.Document) => user.$id);
 
   const [likes, setLikes] = useState<string[]>(likesList);
-  const [isSaved, setIsSaved] = useState(false);
 
   const { mutate: likePost } = useLikePost();
   const { mutate: savePost } = useSavePost();
@@ -29,12 +29,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
   const { data: currentUser } = useGetCurrentUser();
 
   const savedPostRecord = currentUser?.save.find(
-    (record: Models.Document) => record.post.$id === post.$id
+    (record: SavedPost) => record.post.$id === post.$id
   );
 
-  useEffect(() => {
-    setIsSaved(!!savedPostRecord);
-  }, [currentUser]);
+  const isSaved = !!savedPostRecord;
 
   const handleLikePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
@@ -59,12 +57,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     e.stopPropagation();
 
     if (savedPostRecord) {
-      setIsSaved(false);
       return deleteSavePost(savedPostRecord.$id);
     }
 
-    savePost({ userId: userId, postId: post.$id });
-    setIsSaved(true);
+    savePost({ userId, postId: post.$id });
   };
 
   const containerStyles = location.pathname.startsWith("/profile")

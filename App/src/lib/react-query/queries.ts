@@ -33,6 +33,7 @@ import type {
   IUpdateUser,
 } from "@/types";
 import { Post } from "@/types";
+// import { Models } from "appwrite";
 
 
 // ============================================================
@@ -84,11 +85,15 @@ export const useSearchPosts = (searchTerm: string) => {
 };
 
 export const useGetRecentPosts = () => {
-  return useQuery({
+  return useQuery<{
+    documents: Post[];
+    total: number;
+  }>({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
     queryFn: getRecentPosts,
   });
 };
+
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
@@ -112,12 +117,16 @@ export const useGetPostById = (postId?: string) => {
 
 
 export const useGetUserPosts = (userId?: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
+  return useQuery<{
+    documents: Post[];
+    total: number;
+  } | undefined>({
+    queryKey: ["getUserPosts", userId],
     queryFn: () => getUserPosts(userId),
     enabled: !!userId,
   });
 };
+
 
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();

@@ -12,6 +12,7 @@ import {
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
 
+
 const PostDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -28,8 +29,14 @@ const PostDetails = () => {
   );
 
   const handleDeletePost = () => {
-    deletePost({ postId: id, imageId: post?.imageId });
-    navigate(-1);
+    if (!id || !post?.imageId) return;
+
+  deletePost({
+      postId: id,
+      imageId: post.imageId,
+  });
+
+  navigate(-1);
   };
 
   return (
@@ -121,7 +128,7 @@ const PostDetails = () => {
             <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
               <p>{post?.caption}</p>
               <ul className="flex gap-1 mt-2">
-                {post?.tags.map((tag: string, index: string) => (
+                {post?.tags.map((tag: string, index: number) => (
                   <li
                     key={`${tag}${index}`}
                     className="text-light-3 small-regular">

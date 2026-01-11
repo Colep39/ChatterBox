@@ -1,13 +1,14 @@
-import { Models } from "appwrite";
+// import { Models } from "appwrite";
 
 import { GridPostList, Loader } from "@/components/shared";
 import { useGetCurrentUser } from "@/lib/react-query/queries";
+import { SavedPost } from "@/components/forms/PostForm";
 
 const Saved = () => {
   const { data: currentUser } = useGetCurrentUser();
 
   const savePosts = currentUser?.save
-    .map((savePost: Models.Document) => ({
+    .map((savePost: SavedPost) => ({
       ...savePost.post,
       creator: {
         imageUrl: currentUser.imageUrl,
