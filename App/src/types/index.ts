@@ -49,12 +49,12 @@ export type INewUser = {
 
 import { Models } from "appwrite";
 
-export type User = {
-  $id: string;
+export type User = Models.Document & {
   name: string;
   username: string;
   imageUrl?: string;
 };
+
 
 
 export type Post = Models.Document & {

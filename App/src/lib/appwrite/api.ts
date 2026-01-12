@@ -452,6 +452,9 @@ export async function getRecentPosts(): Promise<{
 // ============================================================
 
 // ============================== GET USERS
+
+import { User } from "@/types";
+
 export async function getUsers(limit?: number) {
   const queries: string[] = [Query.orderDesc("$createdAt")];
 
@@ -459,20 +462,16 @@ export async function getUsers(limit?: number) {
     queries.push(Query.limit(limit));
   }
 
-  try {
-    const users = await databases.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.userCollectionId,
-      queries
-    );
+  const users = await databases.listDocuments<User>(
+    appwriteConfig.databaseId,
+    appwriteConfig.userCollectionId,
+    queries
+  );
 
-    if (!users) throw Error;
-
-    return users;
-  } catch (error) {
-    console.log(error);
-  }
+  return users;
 }
+
+
 
 // ============================== GET USER BY ID
 export async function getUserById(userId: string) {

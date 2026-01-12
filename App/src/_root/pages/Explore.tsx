@@ -6,22 +6,34 @@ import useDebounce from "@/hooks/useDebounce";
 import { GridPostList, Loader } from "@/components/shared";
 import { useGetPosts, useSearchPosts } from "@/lib/react-query/queries";
 import { Models } from "appwrite";
+import { Post } from "@/types";
 
 export type SearchResultProps = {
   isSearchFetching: boolean;
   searchedPosts?: Models.DocumentList<Models.Document>;
 };
 
-const SearchResults = ({ isSearchFetching, searchedPosts }: SearchResultProps) => {
+const SearchResults = ({
+  isSearchFetching,
+  searchedPosts,
+}: SearchResultProps) => {
   if (isSearchFetching) {
     return <Loader />;
-  } else if (searchedPosts && searchedPosts.documents.length > 0) {
-    return <GridPostList posts={searchedPosts.documents} />;
-  } else {
+  }
+
+  if (searchedPosts && searchedPosts.documents.length > 0) {
     return (
-      <p className="text-light-4 mt-10 text-center w-full">No results found</p>
+      <GridPostList
+        posts={searchedPosts.documents as Post[]}
+      />
     );
   }
+
+  return (
+    <p className="text-light-4 mt-10 text-center w-full">
+      No results found
+    </p>
+  );
 };
 
 const Explore = () => {
